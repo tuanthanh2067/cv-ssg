@@ -5,27 +5,45 @@ const chalk = require("chalk");
 
 const { validateExtension, validateString } = require("./helpers/validateFile");
 const { readFile } = require("./helpers/readFile");
-
 const { createHtmlFile } = require("./helpers/createHtml");
 
-clear();
+// version
+if (args.version || args.v) {
+  console.log(chalk.green(`v${require("./package.json").version}`));
+  return;
+}
 
+// help
+if (args.help || args.h) {
+  console.log("--version || -v", "for version");
+  console.log("--input || -i", "file input");
+  return;
+}
+
+clear();
 const file = args.input || args.i || "";
 
 if (!validateString(file) || !validateExtension(file)) return;
 
+// read file and return an array of strings
 const data = readFile(file);
-if (!data) return;
+if (!data) return; // nothing in the array
 
+// generate dom
 const dom = createHtmlFile(data);
 try {
   const folder = `${process.cwd()}/dist`;
-  if (!fs.existsSync(folder)) {
-    fs.mkdirSync(folder);
-  }
 
+  // remove dir
+  fs.rmdirSync(folder, { recursive: true });
+
+  // create new dir
+  fs.mkdirSync(folder);
+
+  // remove extension
   const filename = file.replace(/\.[^/.]+$/, "");
 
+  // write the html to the dist folder
   fs.writeFileSync(`${folder}/${filename}.html`, dom);
 
   console.log(chalk.yellow("Convert to html successfully"));
