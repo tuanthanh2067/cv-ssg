@@ -22,9 +22,10 @@ if (args.help || args.h) {
 
 // stylesheet option
 let stylesheetLink;
-if (args.stylesheet !== "" || args.s !== "") {
+if (args.stylesheet || args.s) {
   console.log(args.stylesheet, args.s);
-  stylesheetLink = args.stylesheet.trim() || args.s.trim();
+  stylesheetLink = args.stylesheet || args.s;
+  stylesheetLink = stylesheetLink.trim();
 }
 
 clear();
@@ -32,7 +33,8 @@ clear();
 // file input
 let file;
 if (args.input || args.i) {
-  file = args.input.trim() || args.i.trim();
+  file = args.input || args.i;
+  file = file.trim();
 }
 
 if (!validateString(file) || !validateExtension(file)) return;

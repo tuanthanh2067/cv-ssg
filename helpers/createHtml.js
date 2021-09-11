@@ -14,7 +14,11 @@ module.exports.createHtmlFile = (data, stylesheetLink) => {
         <meta charset="utf-8">
         <title>Filename</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        ${stylesheetLink && `<link rel='stylesheet' href='${stylesheetLink}'>`}
+        ${
+          stylesheetLink
+            ? `<link rel='stylesheet' href='${stylesheetLink}'>`
+            : ""
+        }
     </head>
     <body>
         ${dom}
