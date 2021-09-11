@@ -1,4 +1,4 @@
-module.exports.createHtmlFile = (data) => {
+module.exports.createHtmlFile = (data, stylesheetLink) => {
   let dom = "";
   data.forEach((e) => {
     if (e !== "") {
@@ -14,6 +14,7 @@ module.exports.createHtmlFile = (data) => {
         <meta charset="utf-8">
         <title>Filename</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        ${stylesheetLink && `<link rel='stylesheet' href='${stylesheetLink}'>`}
     </head>
     <body>
         ${dom}

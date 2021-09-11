@@ -20,8 +20,20 @@ if (args.help || args.h) {
   return;
 }
 
+// stylesheet option
+let stylesheetLink;
+if (args.stylesheet !== "" || args.s !== "") {
+  console.log(args.stylesheet, args.s);
+  stylesheetLink = args.stylesheet.trim() || args.s.trim();
+}
+
 clear();
-const file = args.input || args.i || "";
+
+// file input
+let file;
+if (args.input || args.i) {
+  file = args.input.trim() || args.i.trim();
+}
 
 if (!validateString(file) || !validateExtension(file)) return;
 
@@ -30,7 +42,7 @@ const data = readFile(file);
 if (!data) return; // nothing in the array
 
 // generate dom
-const dom = createHtmlFile(data);
+const dom = createHtmlFile(data, stylesheetLink);
 try {
   const folder = `${process.cwd()}/dist`;
 
