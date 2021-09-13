@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const clear = require("clear");
 const args = require("minimist")(process.argv.slice(2));
 const fs = require("fs");
