@@ -1,10 +1,13 @@
 {
   "name": "cv-ssg",
-  "version": "0.1",
+  "version": "0.1.0",
   "description": "",
-  "main": "cv-ssg.js",
+  "main": "bin/cv-ssg.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "cv-ssg": "./bin/cv-ssg.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +22,7 @@
   "dependencies": {
     "chalk": "^4.1.2",
     "clear": "^0.1.0",
-    "minimist": "^1.2.5"
+    "minimist": "^1.2.5",
+    "node-dir": "^0.1.17"
   }
 }
