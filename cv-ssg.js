@@ -4,8 +4,8 @@ const fs = require("fs");
 const chalk = require("chalk");
 
 const { validateExtension, validateString } = require("./helpers/validateFile");
-const { readFile } = require("./helpers/readFile");
-const { createHtmlFile } = require("./helpers/createHtml");
+const { createFile, createFolder } = require("./helpers/createFile");
+const { readFolder } = require("./helpers/readFolder");
 
 // version
 if (args.version || args.v) {
@@ -15,52 +15,60 @@ if (args.version || args.v) {
 
 // help
 if (args.help || args.h) {
-  console.log("--version || -v", "for version");
-  console.log("--input || -i", "file input");
+  console.log("--version || -v        ", "app version");
+  console.log("--input || -i          ", "file input");
+  console.log("                       ", "it can be either a folder or a file");
+  console.log("--stylesheet || -s     ", "style sheet");
+  console.log(
+    "                       ",
+    "-s default will import a random css from internet"
+  );
   return;
-}
-
-// stylesheet option
-let stylesheetLink;
-if (args.stylesheet || args.s) {
-  console.log(args.stylesheet, args.s);
-  stylesheetLink = args.stylesheet || args.s;
-  stylesheetLink = stylesheetLink.trim();
 }
 
 clear();
 
-// file input
+// stylesheet option
+let stylesheetLink;
+if (args.stylesheet || args.s) {
+  // style sheet default option
+  if (args.stylesheet === "default" || args.s === "default") {
+    stylesheetLink = "https://cdn.jsdelivr.net/npm/water.css@2/out/water.css";
+  } else {
+    stylesheetLink = args.stylesheet || args.s;
+    stylesheetLink = stylesheetLink.trim();
+  }
+}
+
 let file;
 if (args.input || args.i) {
   file = args.input || args.i;
   file = file.trim();
 }
 
-if (!validateString(file) || !validateExtension(file)) return;
+// folder input
+fs.stat(file, (err, stat) => {
+  if (err) {
+    console.log(chalk.yellow(`Can not open ${file}`));
+    return;
+  }
 
-// read file and return an array of strings
-const data = readFile(file);
-if (!data) return; // nothing in the array
+  const folder = createFolder();
 
-// generate dom
-const dom = createHtmlFile(data, stylesheetLink);
-try {
-  const folder = `${process.cwd()}/dist`;
-
-  // remove dir
-  fs.rmdirSync(folder, { recursive: true });
-
-  // create new dir
-  fs.mkdirSync(folder);
-
-  // remove extension
-  const filename = file.replace(/\.[^/.]+$/, "");
-
-  // write the html to the dist folder
-  fs.writeFileSync(`${folder}/${filename}.html`, dom);
-
-  console.log(chalk.yellow("Convert to html successfully"));
-} catch (err) {
-  console.log(chalk.yellow("Can not convert file"));
-}
+  if (stat && stat.isDirectory()) {
+    readFolder(file, (err, results) => {
+      if (err) {
+        console.log(chalk.yellow(`Can not read ${file}`));
+        return;
+      }
+      results.forEach((file) => {
+        createFile(file, stylesheetLink, folder);
+      });
+      return;
+    });
+  } else {
+    // file input
+    if (!validateString(file) || !validateExtension(file)) return;
+    createFile(file, stylesheetLink, folder);
+  }
+});
