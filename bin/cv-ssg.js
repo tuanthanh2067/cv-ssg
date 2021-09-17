@@ -1,34 +1,20 @@
 #!/usr/bin/env node
-
-const clear = require("clear");
-const args = require("minimist")(process.argv.slice(2));
 const fs = require("fs");
 const chalk = require("chalk");
+const { program } = require('commander');
 
 const { validateExtension, validateString } = require("./helpers/validateFile");
 const { createFile, createFolder } = require("./helpers/createFile");
 const { readFolder } = require("./helpers/readFolder");
 
-// version
-if (args.version || args.v) {
-  console.log(chalk.green(`v${require("./package.json").version}`));
-  return;
-}
+program.version(`v${require('../package.json').version}`, '-v, --version', 'will display current version');
 
-// help
-if (args.help || args.h) {
-  console.log("--version || -v        ", "app version");
-  console.log("--input || -i          ", "file input");
-  console.log("                       ", "it can be either a folder or a file");
-  console.log("--stylesheet || -s     ", "style sheet");
-  console.log(
-    "                       ",
-    "-s default will import a random css from internet"
-  );
-  return;
-}
-
-clear();
+program
+    .option("-i, --input <type>", "input file or folder")
+    .option("-s, --stylesheet <type>", "use your custom stylesheet or <default> for default stylesheet")
+    
+program.parse(process.argv);
+const args = program.opts();
 
 // stylesheet option
 let stylesheetLink;
