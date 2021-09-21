@@ -20,6 +20,7 @@ module.exports.createFile = (file, stylesheetLink, folder) => {
     console.log(chalk.yellow("Convert to html successfully"));
   } catch (err) {
     console.log(chalk.yellow("Can not convert file"));
+    return process.exit(1);
   }
 };
 

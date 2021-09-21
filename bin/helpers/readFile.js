@@ -7,5 +7,6 @@ module.exports.readFile = (file) => {
   } catch (err) {
     // TODO: check for errors before parsing when giving an invalid file
     console.log(require("chalk").yellow("Error occurred while reading file"));
+    return process.exit(1);
   }
 };
