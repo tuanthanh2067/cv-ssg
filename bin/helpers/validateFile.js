@@ -10,7 +10,7 @@ module.exports.validateString = (file) => {
 };
 
 module.exports.validateExtension = (file) => {
-  if (path.extname(file) !== ".txt") {
+  if (path.extname(file) !== ".txt" && path.extname(file) !== ".md") {
     console.log(chalk.yellow("wrong file extension, please try again"));
     return false;
   }
