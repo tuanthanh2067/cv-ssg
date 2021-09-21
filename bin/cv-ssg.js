@@ -1,18 +1,25 @@
 #!/usr/bin/env node
 const fs = require("fs");
 const chalk = require("chalk");
-const { program } = require('commander');
+const { program } = require("commander");
 
 const { validateExtension, validateString } = require("./helpers/validateFile");
 const { createFile, createFolder } = require("./helpers/createFile");
 const { readFolder } = require("./helpers/readFolder");
 
-program.version(`v${require('../package.json').version}`, '-v, --version', 'will display current version');
+program.version(
+  `v${require("../package.json").version}`,
+  "-v, --version",
+  "will display current version"
+);
 
 program
-    .option("-i, --input <type>", "input file or folder")
-    .option("-s, --stylesheet <type>", "use your custom stylesheet or <default> for default stylesheet")
-    
+  .option("-i, --input <type>", "input file or folder")
+  .option(
+    "-s, --stylesheet <type>",
+    "use your custom stylesheet or <default> for default stylesheet"
+  );
+
 program.parse(process.argv);
 const args = program.opts();
 
@@ -38,7 +45,7 @@ if (args.input || args.i) {
 fs.stat(file, (err, stat) => {
   if (err) {
     console.log(chalk.yellow(`Can not open ${file}`));
-    return;
+    return process.exit(1);
   }
 
   const folder = createFolder();
@@ -47,7 +54,7 @@ fs.stat(file, (err, stat) => {
     readFolder(file, (err, results) => {
       if (err) {
         console.log(chalk.yellow(`Can not read ${file}`));
-        return;
+        return process.exit(1);
       }
       results.forEach((file) => {
         createFile(file, stylesheetLink, folder);
@@ -56,7 +63,8 @@ fs.stat(file, (err, stat) => {
     });
   } else {
     // file input
-    if (!validateString(file) || !validateExtension(file)) return;
+    if (!validateString(file) || !validateExtension(file))
+      return process.exit(1);
     createFile(file, stylesheetLink, folder);
   }
 });
