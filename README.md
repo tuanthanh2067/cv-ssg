@@ -8,10 +8,10 @@ CV-SSG is a command line tool that will produce **.html** files from **.txt** an
 
 # Features
 
-- Generate **.html** files from a folder of **.txt** or **.md** files
+- Generate **.html** files from a folder of **.txt** and **.md** files
 - Recursively read a folder if there's any
 - Allow stylesheets or default stylesheet
-- Parse **Heading 1** Markdown syntax into correct HTML syntax for input file of type **.md**
+- Parse **Heading1** Markdown syntax into correct HTML syntax for input file of type **.md**
 
 # Option keys
 
