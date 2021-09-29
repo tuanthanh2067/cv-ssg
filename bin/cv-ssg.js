@@ -59,7 +59,6 @@ fs.stat(file, (err, stat) => {
       results.forEach((file) => {
         createFile(file, stylesheetLink, folder);
       });
-      return;
     });
   } else {
     // file input
@@ -67,4 +66,5 @@ fs.stat(file, (err, stat) => {
       return process.exit(1);
     createFile(file, stylesheetLink, folder);
   }
+  return process.exit(0);
 });
