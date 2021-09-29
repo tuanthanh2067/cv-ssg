@@ -5,7 +5,9 @@ module.exports.readFile = (file) => {
   try {
     results = require("fs").readFileSync(file, "utf-8");
     if (path.extname(file) === ".md") {
-      results = results.replace(/^# (.*$)/gim, "<h1>$1</h1>");
+      results = results
+        .replace(/^# (.*$)/gim, "<h1>$1</h1>")
+        .replace(/^`\n([\s\S]*?)```$/gim, "<code>$1</code>");
     }
     return results.split(/\r?\n\r?\n/).map((e) => e.replace(/\r?\n/, " "));
   } catch (err) {
