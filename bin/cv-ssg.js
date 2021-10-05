@@ -16,8 +16,7 @@ program
   .option("-i, --input <type>", "input file or folder")
   .option(
     "-s, --stylesheet <type>",
-    "use your custom stylesheet or <default> for default stylesheet",
-    "https://cdn.jsdelivr.net/npm/water.css@2/out/water.css"
+    "use your custom stylesheet or <default> for default stylesheet"
   )
   .option(
     "-c, --config <type>",
@@ -47,9 +46,7 @@ if (args.config || args.c) {
 
     // sets option's value based on config file
     args.input = userInput.input ? userInput.input : "";
-    args.stylesheet = userInput.stylesheet
-      ? userInput.stylesheet
-      : args.stylesheet;
+    args.stylesheet = userInput.stylesheet ? userInput.stylesheet : "";
   }
 
   args.version = false; // ignore -v when -c is specified
@@ -65,7 +62,16 @@ if (args.help || args.h) {
 }
 
 // stylesheet option
-let stylesheetLink = args.stylesheet.trim();
+let stylesheetLink;
+if (args.stylesheet || args.s) {
+  // style sheet default option
+  if (args.stylesheet === "default" || args.s === "default") {
+    stylesheetLink = "https://cdn.jsdelivr.net/npm/water.css@2/out/water.css";
+  } else {
+    stylesheetLink = args.stylesheet || args.s;
+    stylesheetLink = stylesheetLink.trim();
+  }
+}
 
 if (args.input || args.i) {
   file = args.input || args.i;
