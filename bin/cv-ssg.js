@@ -3,7 +3,11 @@ const fs = require("fs");
 const chalk = require("chalk");
 const { program } = require("commander");
 
-const { validateExtension, validateString } = require("./helpers/validateFile");
+const {
+  validateExtension,
+  validateString,
+  validateConfigFile,
+} = require("./helpers/validateFile");
 const { createFile, createFolder } = require("./helpers/createFile");
 const { readFolder } = require("./helpers/readFolder");
 
@@ -18,10 +22,18 @@ program
   .option(
     "-s, --stylesheet <type>",
     "use your custom stylesheet or <default> for default stylesheet"
-  );
+  )
+  .option("-c, --config <type>", "specify config.json file");
 
 program.parse(process.argv);
 const args = program.opts();
+
+if (args.config || args.c) {
+  let file = args.config || args.c;
+  if (validateConfigFile(file.trim())) {
+    console.log(`${file} is a valid json file!`);
+  }
+}
 
 // stylesheet option
 let stylesheetLink;
@@ -39,32 +51,32 @@ let file;
 if (args.input || args.i) {
   file = args.input || args.i;
   file = file.trim();
-}
 
-// folder input
-fs.stat(file, (err, stat) => {
-  if (err) {
-    console.log(chalk.yellow(`Can not open ${file}`));
-    return process.exit(1);
-  }
-
-  const folder = createFolder();
-
-  if (stat && stat.isDirectory()) {
-    readFolder(file, (err, results) => {
-      if (err) {
-        console.log(chalk.yellow(`Can not read ${file}`));
-        return process.exit(1);
-      }
-      results.forEach((file) => {
-        createFile(file, stylesheetLink, folder);
-      });
-    });
-  } else {
-    // file input
-    if (!validateString(file) || !validateExtension(file))
+  // folder input
+  fs.stat(file, (err, stat) => {
+    if (err) {
+      console.log(chalk.yellow(`Can not open ${file}`));
       return process.exit(1);
-    createFile(file, stylesheetLink, folder);
-  }
-  return process.exit(0);
-});
+    }
+
+    const folder = createFolder();
+
+    if (stat && stat.isDirectory()) {
+      readFolder(file, (err, results) => {
+        if (err) {
+          console.log(chalk.yellow(`Can not read ${file}`));
+          return process.exit(1);
+        }
+        results.forEach((file) => {
+          createFile(file, stylesheetLink, folder);
+        });
+      });
+    } else {
+      // file input
+      if (!validateString(file) || !validateExtension(file))
+        return process.exit(1);
+      createFile(file, stylesheetLink, folder);
+    }
+    return process.exit(0);
+  });
+}
