@@ -10,6 +10,7 @@ const {
 } = require("./helpers/validateFile");
 const { createFile, createFolder } = require("./helpers/createFile");
 const { readFolder } = require("./helpers/readFolder");
+const { readConfigFile } = require("./helpers/readConfigFile");
 
 program.version(
   `v${require("../package.json").version}`,
@@ -26,12 +27,22 @@ program
   .option("-c, --config <type>", "specify config.json file");
 
 program.parse(process.argv);
+
 const args = program.opts();
+
+let userInput;
 
 if (args.config || args.c) {
   let file = args.config || args.c;
   if (validateConfigFile(file.trim())) {
-    console.log(`${file} is a valid json file!`);
+    fs.stat(file.trim(), (err) => {
+      if (err) {
+        console.log(chalk.yellow(`Can not open ${file}`));
+        return process.exit(1);
+      }
+      userInput = readConfigFile(file.trim());
+      console.log(userInput.input);
+    });
   }
 }
 
