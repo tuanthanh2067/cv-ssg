@@ -1,3 +1,4 @@
+const { Cipher } = require("crypto");
 const path = require("path");
 
 module.exports.readConfigFile = (file) => {
