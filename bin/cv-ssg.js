@@ -97,6 +97,7 @@ if (args.input || args.i) {
         results.forEach((file) => {
           createFile(file, stylesheetLink, folder);
         });
+        return;
       });
     } else {
       // file input
