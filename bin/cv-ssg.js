@@ -55,10 +55,12 @@ if (args.config || args.c) {
 
 if (args.version || args.v) {
   console.log(`v${require("../package.json").version}`);
+  return process.exit(0);
 }
 
 if (args.help || args.h) {
   console.log(program.help());
+  return process.exit(0);
 }
 
 // stylesheet option
