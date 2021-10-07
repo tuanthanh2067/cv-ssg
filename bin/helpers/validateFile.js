@@ -16,3 +16,11 @@ module.exports.validateExtension = (file) => {
   }
   return true;
 };
+
+module.exports.validateConfigFile = (file) => {
+  if (path.extname(file) !== ".json") {
+    console.log(chalk.yellow("wrong file extension, please try again"));
+    return false;
+  }
+  return true;
+};

@@ -1,3 +1,5 @@
 node_modules/
 .env
 dist
+testing/
+test.json
