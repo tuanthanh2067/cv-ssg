@@ -1,16 +1,10 @@
 #!/usr/bin/env node
-const fs = require("fs");
 const chalk = require("chalk");
 const { program } = require("commander");
 
-const {
-  validateExtension,
-  validateString,
-  validateConfigFile,
-} = require("./helpers/validateFile");
-const { createFile, createFolder } = require("./helpers/createFile");
-const { readFolder } = require("./helpers/readFolder");
-const { readConfigFile } = require("./helpers/readConfigFile");
+const ReadPath = require("./helpers/readPath");
+const ProduceFile = require("./helpers/produceFile");
+const ProduceFolder = require("./helpers/produceFolder");
 
 program
   .option("-i, --input <type>", "input file or folder")
@@ -29,85 +23,71 @@ program.parse(process.argv);
 
 const args = program.opts();
 
-let userInput;
-let file;
-
-if (args.config || args.c) {
-  file = args.config || args.c;
-  if (validateConfigFile(file.trim())) {
-    fs.stat(file.trim(), (err) => {
-      if (err) {
-        console.log(chalk.yellow(`Can not open ${file}`));
-        return process.exit(1);
-      }
-    });
-
-    userInput = readConfigFile(file.trim());
-
-    // sets option's value based on config file
-    args.input = userInput.input ? userInput.input : "";
-    args.stylesheet = userInput.stylesheet ? userInput.stylesheet : "";
-  }
-
-  args.version = false; // ignore -v when -c is specified
-  args.help = false; // ignore -h when -c is specified
-}
-
-if (args.version || args.v) {
-  console.log(`v${require("../package.json").version}`);
-  return process.exit(0);
-}
-
-if (args.help || args.h) {
-  console.log(program.help());
-  return process.exit(0);
-}
-
-// stylesheet option
-let stylesheetLink;
-if (args.stylesheet || args.s) {
-  // style sheet default option
-  if (args.stylesheet === "default" || args.s === "default") {
-    stylesheetLink = "https://cdn.jsdelivr.net/npm/water.css@2/out/water.css";
-  } else {
-    stylesheetLink = args.stylesheet || args.s;
-    stylesheetLink = stylesheetLink.trim();
-  }
-}
-
-if (args.input || args.i) {
-  file = args.input || args.i;
-  file = file.trim();
-
-  // folder input
-  fs.stat(file, (err, stat) => {
-    if (err) {
-      console.log(chalk.yellow(`Can not open ${file} ${err}`));
-      return process.exit(1);
-    }
-
-    const folder = createFolder();
-
-    if (stat && stat.isDirectory()) {
-      readFolder(file, (err, results) => {
-        if (err) {
-          console.log(chalk.yellow(`Can not read ${file}`));
-          return process.exit(1);
-        }
-        results.forEach((file) => {
-          createFile(file, stylesheetLink, folder);
-        });
-        return;
-      });
+const getParams = (args) => {
+  // stylesheet option
+  let styleSheetLink = "";
+  if (args.stylesheet || args.s) {
+    // style sheet default option
+    if (args.stylesheet === "default" || args.s === "default") {
+      styleSheetLink = "https://cdn.jsdelivr.net/npm/water.css@2/out/water.css";
     } else {
-      // file input
-      if (!validateString(file) || !validateExtension(file))
-        return process.exit(1);
-      createFile(file, stylesheetLink, folder);
+      styleSheetLink = args.styleSheetLink || args.s;
     }
+  }
+
+  if (args.config || args.c) {
+    // sets option's value based on config file
+    return {
+      path: args.config || args.c,
+      styleSheetLink,
+    };
+  }
+
+  if (args.version || args.v) {
+    console.log(`v${require("../package.json").version}`);
     return process.exit(0);
-  });
-} else {
-  console.log(chalk.yellow(`Invalid input`));
-  console.log(program.help());
-}
+  }
+  if (args.help || args.h) {
+    console.log(program.help());
+    return process.exit(0);
+  }
+
+  if (args.input || args.i) {
+    return {
+      path: args.input || args.i,
+      styleSheetLink,
+    };
+  }
+};
+
+const main = async () => {
+  const { path, styleSheetLink } = getParams(args);
+  let readPathVar;
+  try {
+    readPathVar = new ReadPath(path);
+  } catch (err) {
+    console.log(chalk.yellow(err));
+  }
+  const readResult = await readPathVar.read();
+
+  const folder = new ProduceFolder();
+  const folderPath = folder.getPath();
+
+  if (readPathVar.isFolder()) {
+    Promise.all(readResult).then((data) => {
+      data.forEach((e) => {
+        const file = new ProduceFile(e.results, e.path, e.ext);
+        file.produce(styleSheetLink, folderPath);
+      });
+    });
+    return;
+  }
+  const produceFile = new ProduceFile(
+    readResult.results,
+    readResult.path,
+    readResult.ext
+  );
+  produceFile.produce(styleSheetLink, folderPath);
+};
+
+main();
