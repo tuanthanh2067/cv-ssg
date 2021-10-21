@@ -1,6 +1,7 @@
 const fs = require("fs").promises;
 const path = require("path");
 const dir = require("node-dir");
+const showdown = require("showdown");
 
 module.exports = class ReadPath {
   constructor(link) {
@@ -75,9 +76,9 @@ module.exports = class ReadPath {
     let results = await this.readFile();
 
     if (this.target === ".md") {
-      results = results
-        .replace(/^# (.*$)/gim, "<h1>$1</h1>")
-        .replace(/^`\n([\s\S]*?)```$/gim, "<code>$1</code>");
+      const converter = new showdown.Converter();
+
+      results = converter.makeHtml(results);
     }
 
     return results.split(/\r?\n\r?\n/).map((e) => e.replace(/\r?\n/, " "));
