@@ -74,14 +74,18 @@ module.exports = class ReadPath {
 
   async handleFile() {
     let results = await this.readFile();
+    let metaData = [];
 
     if (this.target === ".md") {
-      const converter = new showdown.Converter();
-
+      const converter = new showdown.Converter({ metadata: true });
       results = converter.makeHtml(results);
+      metaData = converter.getMetadata();
     }
 
-    return results.split(/\r?\n\r?\n/).map((e) => e.replace(/\r?\n/, " "));
+    return {
+      results: results.split(/\r?\n\r?\n/).map((e) => e.replace(/\r?\n/, " ")),
+      metaData,
+    };
   }
 
   async handleJson() {
@@ -95,8 +99,10 @@ module.exports = class ReadPath {
       return result;
     }
     if (this.target === ".txt" || this.target === ".md") {
+      const results = await this.handleFile();
       return {
-        results: await this.handleFile(),
+        results: results.results,
+        metaData: results.metaData,
         path: this.path,
         ext: this.target,
       };

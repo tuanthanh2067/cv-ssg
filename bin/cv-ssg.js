@@ -84,6 +84,7 @@ const main = async () => {
   }
   const produceFile = new ProduceFile(
     readResult.results,
+    readResult.metaData,
     readResult.path,
     readResult.ext
   );
