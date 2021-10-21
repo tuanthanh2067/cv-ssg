@@ -2,18 +2,19 @@ const fs = require("fs");
 const chalk = require("chalk");
 
 module.exports = class ProduceFile {
-  constructor(results, path, ext) {
+  constructor(results, metaData, path, ext) {
     this.results = results;
+    this.metaData = metaData;
     this.path = path;
     this.ext = ext;
   }
 
-  createFile(data, styleSheetLink, folder) {
+  createFile(styleSheetLink, folder) {
     // read file and return an array of strings
-    if (!data) return; // nothing in the array
+    if (!this.results) return; // nothing in the array
 
     // generate dom
-    const dom = this.createHtmlFile(data, styleSheetLink);
+    const dom = this.createHtmlFile(this.results, styleSheetLink);
     try {
       // remove full path first and then extension
       const filename = this.path
@@ -30,14 +31,16 @@ module.exports = class ProduceFile {
     }
   }
 
-  //   createFiles(styleSheetLink, folder) {
-  //     this.results.forEach((file) => {
-  //       this.createFile(file, styleSheetLink, folder);
-  //     });
-  //   }
-
   createHtmlFile(data, styleSheetLink) {
+    let meta = "";
     let dom = "";
+
+    if (this.metaData) {
+      Object.keys(this.metaData).forEach((key) => {
+        meta += `<meta name="${key}" content="${this.metaData[key]}"> ${"\n"}`;
+      });
+    }
+
     data.forEach((e) => {
       if (e !== "") {
         dom += `<p>${e}</p>`;
@@ -52,6 +55,7 @@ module.exports = class ProduceFile {
                 <meta charset="utf-8">
                 <title>Filename</title>
                 <meta name="viewport" content="width=device-width, initial-scale=1">
+                ${meta}
                 ${
                   styleSheetLink
                     ? `<link rel='stylesheet' href='${styleSheetLink}'>`
@@ -68,6 +72,6 @@ module.exports = class ProduceFile {
   }
 
   produce(styleSheetLink = "", folder) {
-    this.createFile(this.results, styleSheetLink, folder);
+    this.createFile(styleSheetLink, folder);
   }
 };
