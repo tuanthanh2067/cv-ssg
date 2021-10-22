@@ -68,27 +68,43 @@ const main = async () => {
   } catch (err) {
     console.log(chalk.yellow(err));
   }
-  const readResult = await readPathVar.read();
+
+  let readResult;
+  try {
+    readResult = await readPathVar.read();
+  } catch (err) {
+    console.log(chalk.yellow(err));
+  }
 
   const folder = new ProduceFolder();
   const folderPath = folder.getPath();
 
+  console.log(readPathVar);
+
   if (readPathVar.isFolder()) {
     Promise.all(readResult).then((data) => {
       data.forEach((e) => {
-        const file = new ProduceFile(e.results, e.path, e.ext);
-        file.produce(styleSheetLink, folderPath);
+        const file = new ProduceFile(
+          e.results,
+          e.metaData,
+          e.path,
+          e.ext,
+          e.styleSheetLink || styleSheetLink
+        );
+        file.produce(folderPath);
       });
     });
     return;
   }
+
   const produceFile = new ProduceFile(
     readResult.results,
     readResult.metaData,
     readResult.path,
-    readResult.ext
+    readResult.ext,
+    readResult.styleSheetLink || styleSheetLink
   );
-  produceFile.produce(styleSheetLink, folderPath);
+  produceFile.produce(folderPath);
 };
 
 main();

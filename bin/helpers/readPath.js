@@ -31,20 +31,10 @@ module.exports = class ReadPath {
     return true;
   }
 
-  readFile() {
+  async readFile() {
     try {
       return fs.readFile(this.path, "utf-8");
     } catch (err) {
-      console.log(require("chalk").yellow("Error occurred while reading file"));
-      return process.exit(1);
-    }
-  }
-
-  readConfigFile() {
-    try {
-      return fs.readFile(this.path, "utf-8");
-    } catch (err) {
-      // TODO: check for errors before parsing when giving an invalid file
       console.log(require("chalk").yellow("Error occurred while reading file"));
       return process.exit(1);
     }
@@ -59,24 +49,26 @@ module.exports = class ReadPath {
 
     const results = files.map(async (file) => {
       this.path = file;
-      this.ext = path.extname(file);
+      this.target = path.extname(this.path);
 
-      const result = await this.handleFile();
+      const result = await this.handleFile(this.target);
       return {
-        results: result,
+        results: result.results,
+        metaData: result.metaData,
         path: file,
-        ext: this.ext,
+        ext: this.target,
       };
     });
 
     return results;
   }
 
-  async handleFile() {
+  async handleFile(target) {
     let results = await this.readFile();
-    let metaData = [];
 
-    if (this.target === ".md") {
+    let metaData = [];
+    console.log(target);
+    if (target === ".md") {
       const converter = new showdown.Converter({ metadata: true });
       results = converter.makeHtml(results);
       metaData = converter.getMetadata();
@@ -89,17 +81,26 @@ module.exports = class ReadPath {
   }
 
   async handleJson() {
-    results = await this.readConfigFile();
-    return JSON.parse(results);
+    let results = await this.readFile();
+    const parsedJson = await JSON.parse(results);
+
+    this.path = parsedJson.input;
+    this.target = path.extname(this.path) ? path.extname(this.path) : "folder";
+
+    return {
+      styleSheetLink: parsedJson.stylesheet || "",
+      data: await this.read(),
+    };
   }
 
   async read() {
     if (this.target === "folder") {
-      const result = await this.handleFolder();
-      return result;
+      const results = await this.handleFolder();
+      this.target = "folder";
+      return results;
     }
     if (this.target === ".txt" || this.target === ".md") {
-      const results = await this.handleFile();
+      const results = await this.handleFile(this.target);
       return {
         results: results.results,
         metaData: results.metaData,
@@ -108,10 +109,33 @@ module.exports = class ReadPath {
       };
     }
     if (this.target === ".json") {
+      const jsonData = await this.handleJson();
+
+      // in case input in config file is a folder
+      // which will give back an array of promises
+      // set target to folder
+      if (jsonData.data.length) {
+        this.target = "folder";
+        // loop through each data of type promise
+        // resolve them
+        // create an object with that result and styleSheetLink
+        //
+        return jsonData.data.map((data) => {
+          return Promise.resolve(data).then((result) => {
+            return {
+              ...result,
+              styleSheetLink: jsonData.styleSheetLink,
+            };
+          });
+        });
+      }
+
       return {
-        results: await this.handleJson(),
-        path: this.path,
-        ext: this.ext,
+        results: jsonData.data.results,
+        path: jsonData.data.path,
+        ext: jsonData.data.ext,
+        metaData: jsonData.data.metaData,
+        styleSheetLink: jsonData.styleSheetLink,
       };
     }
 

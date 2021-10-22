@@ -2,19 +2,20 @@ const fs = require("fs");
 const chalk = require("chalk");
 
 module.exports = class ProduceFile {
-  constructor(results, metaData, path, ext) {
+  constructor(results, metaData = null, path, ext, styleSheetLink = "") {
     this.results = results;
     this.metaData = metaData;
     this.path = path;
     this.ext = ext;
+    this.styleSheetLink = styleSheetLink;
   }
 
-  createFile(styleSheetLink, folder) {
+  createFile(folder) {
     // read file and return an array of strings
     if (!this.results) return; // nothing in the array
 
     // generate dom
-    const dom = this.createHtmlFile(this.results, styleSheetLink);
+    const dom = this.createHtmlFile(this.results);
     try {
       // remove full path first and then extension
       const filename = this.path
@@ -31,7 +32,7 @@ module.exports = class ProduceFile {
     }
   }
 
-  createHtmlFile(data, styleSheetLink) {
+  createHtmlFile(data) {
     let meta = "";
     let dom = "";
 
@@ -57,8 +58,8 @@ module.exports = class ProduceFile {
                 <meta name="viewport" content="width=device-width, initial-scale=1">
                 ${meta}
                 ${
-                  styleSheetLink
-                    ? `<link rel='stylesheet' href='${styleSheetLink}'>`
+                  this.styleSheetLink
+                    ? `<link rel='stylesheet' href='${this.styleSheetLink}'>`
                     : ""
                 }
             </head>
@@ -71,7 +72,7 @@ module.exports = class ProduceFile {
     return result;
   }
 
-  produce(styleSheetLink = "", folder) {
-    this.createFile(styleSheetLink, folder);
+  produce(folder) {
+    this.createFile(folder);
   }
 };
