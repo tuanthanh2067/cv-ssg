@@ -5,6 +5,7 @@ const { program } = require("commander");
 const ReadPath = require("./helpers/readPath");
 const ProduceFile = require("./helpers/produceFile");
 const ProduceFolder = require("./helpers/produceFolder");
+const HandleFile = require("./helpers/handleFile");
 
 program
   .option("-i, --input <type>", "input file or folder")
@@ -62,49 +63,57 @@ const getParams = (args) => {
 
 const main = async () => {
   const { path, styleSheetLink } = getParams(args);
-  let readPathVar;
+  let readPath;
   try {
-    readPathVar = new ReadPath(path);
+    readPath = new ReadPath(path);
+    await readPath.init();
+
+    let readResult = readPath.getDetails();
+
+    try {
+      const handleFile = new HandleFile();
+      const returnResult = await handleFile.read(
+        readResult.path,
+        readResult.ext,
+        readPath.results
+      );
+
+      const folder = new ProduceFolder();
+      const folderPath = folder.getPath();
+
+      if (returnResult.length > 1) {
+        Promise.all(returnResult).then((data) => {
+          data.forEach((e) => {
+            const file = new ProduceFile(
+              e.results,
+              e.metaData,
+              e.path,
+              e.ext,
+              e.styleSheetLink || styleSheetLink
+            );
+            file.produce(folderPath);
+          });
+        });
+        return;
+      }
+
+      const produceFile = new ProduceFile(
+        returnResult.results,
+        returnResult.metaData,
+        returnResult.path,
+        returnResult.ext,
+        returnResult.styleSheetLink || styleSheetLink
+      );
+
+      console.log(produceFile);
+
+      produceFile.produce(folderPath);
+    } catch (err) {
+      console.log(chalk.yellow(err));
+    }
   } catch (err) {
     console.log(chalk.yellow(err));
   }
-
-  let readResult;
-  try {
-    readResult = await readPathVar.read();
-  } catch (err) {
-    console.log(chalk.yellow(err));
-  }
-
-  const folder = new ProduceFolder();
-  const folderPath = folder.getPath();
-
-  console.log(readPathVar);
-
-  if (readPathVar.isFolder()) {
-    Promise.all(readResult).then((data) => {
-      data.forEach((e) => {
-        const file = new ProduceFile(
-          e.results,
-          e.metaData,
-          e.path,
-          e.ext,
-          e.styleSheetLink || styleSheetLink
-        );
-        file.produce(folderPath);
-      });
-    });
-    return;
-  }
-
-  const produceFile = new ProduceFile(
-    readResult.results,
-    readResult.metaData,
-    readResult.path,
-    readResult.ext,
-    readResult.styleSheetLink || styleSheetLink
-  );
-  produceFile.produce(folderPath);
 };
 
 main();
