@@ -34,6 +34,7 @@ module.exports = class HandleFile {
       return {
         styleSheetLink: results.stylesheet || "",
         data: await this.read(detail.path, detail.ext, detail.results),
+        assets: results.assets || null,
       };
     } catch (err) {
       console.log(err);
@@ -74,6 +75,7 @@ module.exports = class HandleFile {
     }
     if (ext === ".json") {
       const jsonData = await this.handleJson(results);
+      console.log(jsonData, "json data");
 
       // in case input in config file is a folder
       // which will give back an array of promises
@@ -100,6 +102,7 @@ module.exports = class HandleFile {
         ext: jsonData.data.ext,
         metaData: jsonData.data.metaData,
         styleSheetLink: jsonData.styleSheetLink,
+        assets: jsonData.assets,
       };
     }
 

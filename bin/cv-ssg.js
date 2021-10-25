@@ -6,6 +6,7 @@ const ReadPath = require("./helpers/readPath");
 const ProduceFile = require("./helpers/produceFile");
 const ProduceFolder = require("./helpers/produceFolder");
 const HandleFile = require("./helpers/handleFile");
+const CopyFolder = require("./helpers/copyFolder");
 
 program
   .option("-i, --input <type>", "input file or folder")
@@ -81,6 +82,17 @@ const main = async () => {
       const folder = new ProduceFolder();
       const folderPath = folder.getPath();
 
+      // assets available here or null
+      // copy assets folder to dist folder
+      if (returnResult) {
+        const copyFolder = new CopyFolder(returnResult.assets);
+        try {
+          await copyFolder.copy("./dist/assets");
+        } catch (err) {
+          console.log(err);
+        }
+      }
+
       if (returnResult.length > 1) {
         Promise.all(returnResult).then((data) => {
           data.forEach((e) => {
@@ -104,8 +116,6 @@ const main = async () => {
         returnResult.ext,
         returnResult.styleSheetLink || styleSheetLink
       );
-
-      console.log(produceFile);
 
       produceFile.produce(folderPath);
     } catch (err) {
