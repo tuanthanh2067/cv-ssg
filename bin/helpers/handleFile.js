@@ -1,5 +1,4 @@
 const showdown = require("showdown");
-const path = require("path");
 const ReadPath = require("../helpers/readPath");
 
 module.exports = class HandleFile {
@@ -75,7 +74,6 @@ module.exports = class HandleFile {
     }
     if (ext === ".json") {
       const jsonData = await this.handleJson(results);
-      console.log(jsonData, "json data");
 
       // in case input in config file is a folder
       // which will give back an array of promises

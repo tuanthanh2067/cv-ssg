@@ -1,3 +1,4 @@
+/* global process */
 const fs = require("fs");
 const chalk = require("chalk");
 
@@ -19,7 +20,7 @@ module.exports = class ProduceFile {
     try {
       // remove full path first and then extension
       const filename = this.path
-        .replace(/^.*[\\\/]/, "")
+        .replace(/^.*[\\/]/, "")
         .replace(/\.[^/.]+$/, "");
 
       // write the html to the dist folder
