@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+
+/* global process */
+
 const chalk = require("chalk");
 const { program } = require("commander");
 
@@ -84,7 +87,8 @@ const main = async () => {
 
       // assets available here or null
       // copy assets folder to dist folder
-      if (returnResult) {
+      console.log(returnResult);
+      if (returnResult && returnResult.assets) {
         const copyFolder = new CopyFolder(returnResult.assets);
         try {
           await copyFolder.copy("./dist/assets");

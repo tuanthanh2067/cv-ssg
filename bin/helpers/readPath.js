@@ -1,3 +1,4 @@
+/* global process */
 const fs = require("fs").promises;
 const path = require("path");
 const dir = require("node-dir");
