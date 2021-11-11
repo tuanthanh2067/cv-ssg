@@ -1,6 +1,7 @@
 /* global process */
 const fs = require("fs");
 const chalk = require("chalk");
+const pretty = require("pretty");
 
 module.exports = class ProduceFile {
   constructor(results, metaData = null, path, ext, styleSheetLink = "") {
@@ -70,7 +71,7 @@ module.exports = class ProduceFile {
             </html>
     `;
 
-    return result;
+    return pretty(result, { ocd: true });
   }
 
   produce(folder) {

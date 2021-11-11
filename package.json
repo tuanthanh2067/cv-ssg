@@ -4,7 +4,9 @@
   "description": "",
   "main": "bin/cv-ssg.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --",
+    "test:watch": "jest--watch--",
+    "coverage": "jest --collectCoverage --",
     "pre-commit": "pretty-quick --staged",
     "prepare": "husky install",
     "eslint": "eslint --config .eslintrc.js",
@@ -29,13 +31,16 @@
   "dependencies": {
     "chalk": "^4.1.2",
     "commander": "^8.2.0",
+    "execa": "^5.1.1",
     "fs-extra": "^10.0.0",
     "node-dir": "^0.1.17",
+    "pretty": "^2.0.0",
     "showdown": "^1.9.1"
   },
   "devDependencies": {
     "eslint": "^8.1.0",
     "husky": "^7.0.0",
+    "jest": "^27.3.1",
     "prettier": "2.4.1",
     "pretty-quick": "^3.1.1"
   }
