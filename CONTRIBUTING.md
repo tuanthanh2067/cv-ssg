@@ -25,6 +25,14 @@ yarn
 
 `npx eslint .`
 
+# Testing
+
+`npm test` to test all classes in the project
+
+`npm test e2e` to test the entire project
+
+**In case you want to add tests to the project** please go to folder `./bin/helpers` and find the class you want to tests for, and go to file `something.test.js` or if you some e2e test, please go to `./test/e2e.test.js`.
+
 # Example
 
 **./example/files/sample.txt**
