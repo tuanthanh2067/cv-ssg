@@ -1,5 +1,5 @@
 /* global process */
-const fs = require("fs");
+const fs = require("fs").promises;
 
 module.exports = class ProduceFolder {
   constructor() {
@@ -7,19 +7,15 @@ module.exports = class ProduceFolder {
     this.createFolder();
   }
 
-  createFolder() {
-    this.removeDir();
+  async createFolder() {
+    // remove dir
+    await fs.rmdir(this.path, { recursive: true });
 
     // create new dir
-    fs.mkdirSync(this.path);
+    await fs.mkdir(this.path);
   }
 
   getPath() {
     return this.path;
-  }
-
-  removeDir() {
-    // remove dir
-    fs.rmdirSync(this.path, { recursive: true });
   }
 };
