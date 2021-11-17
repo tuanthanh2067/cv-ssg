@@ -1,5 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`end-to-end integration print help message when --help option is passed 1`] = `
+"cv-ssg.js <args> [options]
+
+Options:
+  --input, -i       input file or folder                                [string]
+  --stylesheet, -s  use your custom stylesheet or <default> for default
+                    stylesheet                            [string] [default: \\"\\"]
+  --config, -c      input a config.json file containing other options' values
+                                                          [string] [default: \\"\\"]
+  -v, --version     Show version number                                [boolean]
+  -h, --help        Show help                                          [boolean]"
+`;
+
+exports[`end-to-end integration print version when --version option is passed 1`] = `"0.1.0"`;
+
 exports[`end-to-end integration prints error and help message when no arguments given 1`] = `
 "cv-ssg.js <args> [options]
 
