@@ -3,12 +3,12 @@ const HandleFile = require("./handleFile");
 describe("handleFile class tests", () => {
   describe("handleFile method should work", () => {
     test("should return empty for both attributes", async () => {
-      const emptyArrayPromise = new Promise(({ resolve }) => {
-        resolve([]);
+      const emptyArrayPromise = new Promise((resolve) => {
+        resolve(null);
       });
       const test = new HandleFile();
       expect(test.handleFile("", emptyArrayPromise)).toStrictEqual(
-        new Promise(({ resolve }) => {
+        new Promise((resolve) => {
           resolve({
             results: [],
             metaData: "",
@@ -18,12 +18,12 @@ describe("handleFile class tests", () => {
     });
 
     test("should return correct values for both attributes txt extension", async () => {
-      const arrayPromise = new Promise(({ resolve }) => {
-        resolve(["Hello World"]);
+      const arrayPromise = new Promise((resolve) => {
+        resolve("Hello World");
       });
       const test = new HandleFile();
       expect(test.handleFile(".txt", arrayPromise)).toStrictEqual(
-        new Promise(({ resolve }) => {
+        new Promise((resolve) => {
           resolve({
             results: ["Hello World"],
             metaData: "",
@@ -33,12 +33,12 @@ describe("handleFile class tests", () => {
     });
 
     test("should return correct values for both attributes txt extension", async () => {
-      const arrayPromise = new Promise(({ resolve }) => {
-        resolve(["Hello World"]);
+      const arrayPromise = new Promise((resolve) => {
+        resolve("Hello World");
       });
       const test = new HandleFile();
       expect(test.handleFile(".txt", arrayPromise)).toStrictEqual(
-        new Promise(({ resolve }) => {
+        new Promise((resolve) => {
           resolve({
             results: ["Hello World"],
             metaData: "",

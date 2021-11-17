@@ -19,7 +19,12 @@ describe("readPath class tests", () => {
       const path = "/sample-test.txt";
       fs.__setMockFileData(path, txtFileData);
       const test = new ReadPath(path);
-      expect(await test.readFile()).toEqual(txtFileData);
+      try {
+        const expectData = await test.readFile();
+        expect(expectData).toEqual(txtFileData);
+      } catch (err) {
+        console.error(err);
+      }
     });
   });
 
@@ -28,14 +33,18 @@ describe("readPath class tests", () => {
     fs.__setMockFileData(path, {
       path: "/sample-test.txt",
       ext: ".txt",
-      results: new Promise(({ resolve }) => {
+      results: new Promise((resolve) => {
         resolve("Hello World");
       }),
     });
     const readPath = new ReadPath(path);
 
     beforeAll(async () => {
-      await readPath.init();
+      try {
+        await readPath.init();
+      } catch (err) {
+        console.error(err);
+      }
     });
 
     test("Should return correct extension", () => {
@@ -47,14 +56,19 @@ describe("readPath class tests", () => {
     });
 
     test("Should return correct results", async () => {
-      expect(await readPath.getResults()).toBe("Hello World");
+      try {
+        const results = await readPath.getResults();
+        expect(results).toBe("Hello World");
+      } catch (err) {
+        console.error(err);
+      }
     });
 
     test("Should return correct details", async () => {
       expect(readPath.getDetails()).toStrictEqual({
         path: "/sample-test.txt",
         ext: ".txt",
-        results: new Promise(({ resolve }) => {
+        results: new Promise((resolve) => {
           resolve("Hello World");
         }),
       });

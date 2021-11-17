@@ -16,8 +16,8 @@ module.exports = class HandleFile {
 
       return {
         results: cResults
-          .split(/\r?\n\r?\n/)
-          .map((e) => e.replace(/\r?\n/, " ")),
+          ? cResults.split(/\r?\n\r?\n/).map((e) => e.replace(/\r?\n/, " "))
+          : [],
         metaData,
       };
     });
