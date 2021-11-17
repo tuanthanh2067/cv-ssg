@@ -3,7 +3,7 @@
 /* global process */
 
 const chalk = require("chalk");
-const { program } = require("commander");
+const yargs = require("yargs");
 
 const ReadPath = require("./helpers/readPath");
 const ProduceFile = require("./helpers/produceFile");
@@ -11,62 +11,62 @@ const ProduceFolder = require("./helpers/produceFolder");
 const HandleFile = require("./helpers/handleFile");
 const CopyFolder = require("./helpers/copyFolder");
 
-program
-  .option("-i, --input <type>", "input file or folder")
-  .option(
-    "-s, --stylesheet <type>",
-    "use your custom stylesheet or <default> for default stylesheet"
-  )
-  .option(
-    "-c, --config <type>",
-    "input a config.json file containing other options' values"
-  )
-  .option("-v, --version", "will display current version")
-  .option("-h, --help", "will display help for command");
+const argv = yargs
+  .usage("$0 <args> [options]")
+  .option("input", {
+    describe: "input file or folder",
+    alias: "i",
+    type: "string",
+  })
+  .option("stylesheet", {
+    describe: "use your custom stylesheet or <default> for default stylesheet",
+    alias: "s",
+    type: "string",
+    default: "",
+  })
+  .option("config", {
+    describe: "input a config.json file containing other options' values",
+    alias: "c",
+    type: "string",
+    default: "",
+  })
+  .alias("v", "version")
+  .alias("h", "help")
+  .help().argv;
 
-program.parse(process.argv);
-
-const args = program.opts();
-
-const getParams = (args) => {
+const getParams = (argv) => {
   // stylesheet option
   let styleSheetLink = "";
-  if (args.stylesheet || args.s) {
+  if (argv.stylesheet || argv.s) {
     // style sheet default option
-    if (args.stylesheet === "default" || args.s === "default") {
+    if (argv.stylesheet === "default" || argv.s === "default") {
       styleSheetLink = "https://cdn.jsdelivr.net/npm/water.css@2/out/water.css";
     } else {
-      styleSheetLink = args.styleSheetLink || args.s;
+      styleSheetLink = argv.styleSheetLink || argv.s;
     }
   }
 
-  if (args.config || args.c) {
+  if (argv.config || argv.c) {
     // sets option's value based on config file
     return {
-      path: args.config || args.c,
+      path: argv.config || argv.c,
       styleSheetLink,
     };
   }
 
-  if (args.version || args.v) {
-    console.log(`v${require("../package.json").version}`);
-    return process.exit(0);
-  }
-  if (args.help || args.h) {
-    console.log(program.help());
-    return process.exit(0);
-  }
-
-  if (args.input || args.i) {
+  if (argv.input || argv.i) {
     return {
-      path: args.input || args.i,
+      path: argv.input || argv.i,
       styleSheetLink,
     };
   }
+
+  yargs.showHelp();
+  return process.exit(1);
 };
 
 const main = async () => {
-  const { path, styleSheetLink } = getParams(args);
+  const { path, styleSheetLink } = getParams(argv);
   let readPath;
   try {
     readPath = new ReadPath(path);
@@ -87,7 +87,6 @@ const main = async () => {
 
       // assets available here or null
       // copy assets folder to dist folder
-      console.log(returnResult);
       if (returnResult && returnResult.assets) {
         const copyFolder = new CopyFolder(returnResult.assets);
         try {
