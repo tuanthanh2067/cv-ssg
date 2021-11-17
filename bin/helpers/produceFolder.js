@@ -9,7 +9,7 @@ module.exports = class ProduceFolder {
 
   async createFolder() {
     // remove dir
-    await fs.rmdir(this.path, { recursive: true });
+    await fs.rm(this.path, { recursive: true });
 
     // create new dir
     await fs.mkdir(this.path);
