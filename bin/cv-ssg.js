@@ -29,6 +29,14 @@ program.parse(process.argv);
 const args = program.opts();
 
 const getParams = (args) => {
+  if (args.version || args.v) {
+    console.log(`v${require("../package.json").version}`);
+    return process.exit(0);
+  }
+  if (args.help || args.h) {
+    console.log(program.help());
+    return process.exit(0);
+  }
   // stylesheet option
   let styleSheetLink = "";
   if (args.stylesheet || args.s) {
@@ -48,25 +56,19 @@ const getParams = (args) => {
     };
   }
 
-  if (args.version || args.v) {
-    console.log(`v${require("../package.json").version}`);
-    return process.exit(0);
-  }
-  if (args.help || args.h) {
-    console.log(program.help());
-    return process.exit(0);
-  }
-
   if (args.input || args.i) {
     return {
       path: args.input || args.i,
       styleSheetLink,
     };
   }
+  console.log(program.help());
+  return process.exit(1);
 };
 
 const main = async () => {
   const { path, styleSheetLink } = getParams(args);
+  console.log("in main");
   let readPath;
   try {
     readPath = new ReadPath(path);
