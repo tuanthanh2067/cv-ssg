@@ -4,10 +4,10 @@ exports[`end-to-end integration print help message when --help option is passed 
 "cv-ssg.js <args> [options]
 
 Options:
-  --input, -i       input file or folder                                [string]
-  --stylesheet, -s  use your custom stylesheet or <default> for default
+  -i, --input       input file or folder                                [string]
+  -s, --stylesheet  use your custom stylesheet or <default> for default
                     stylesheet                            [string] [default: \\"\\"]
-  --config, -c      input a config.json file containing other options' values
+  -c, --config      input a config.json file containing other options' values
                                                           [string] [default: \\"\\"]
   -v, --version     Show version number                                [boolean]
   -h, --help        Show help                                          [boolean]"
@@ -19,10 +19,10 @@ exports[`end-to-end integration prints error and help message when no arguments 
 "cv-ssg.js <args> [options]
 
 Options:
-  --input, -i       input file or folder                                [string]
-  --stylesheet, -s  use your custom stylesheet or <default> for default
+  -i, --input       input file or folder                                [string]
+  -s, --stylesheet  use your custom stylesheet or <default> for default
                     stylesheet                            [string] [default: \\"\\"]
-  --config, -c      input a config.json file containing other options' values
+  -c, --config      input a config.json file containing other options' values
                                                           [string] [default: \\"\\"]
   -v, --version     Show version number                                [boolean]
   -h, --help        Show help                                          [boolean]"
