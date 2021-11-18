@@ -64,7 +64,6 @@ module.exports = class HandleFile {
       return await this.handleFolder(results);
     }
     if (ext === ".txt" || ext === ".md") {
-      console.log("hello");
       const returnResults = await this.handleFile(ext, results);
 
       return {

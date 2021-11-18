@@ -4,15 +4,14 @@ const fs = require("fs").promises;
 module.exports = class ProduceFolder {
   constructor() {
     this.path = `${process.cwd()}/dist`;
-    this.createFolder();
   }
 
   async createFolder() {
-    // remove dir
-    await fs.rm(this.path, { recursive: true });
-
-    // create new dir
-    await fs.mkdir(this.path);
+    try {
+      await fs.mkdir(this.path, { recursive: true });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   getPath() {

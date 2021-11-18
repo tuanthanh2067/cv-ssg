@@ -83,6 +83,7 @@ const main = async () => {
       );
 
       const folder = new ProduceFolder();
+      await folder.createFolder();
       const folderPath = folder.getPath();
 
       // assets available here or null
