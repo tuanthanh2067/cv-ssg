@@ -24,4 +24,36 @@ describe("end-to-end integration", () => {
     expect(stdout).toMatchSnapshot();
     expect(stderr).toEqual("");
   });
+
+  test("print error message when wrong file extension is passed using -i", async () => {
+    const { stderr, stdout, exitCode } = await run("-i", "invalid.xml");
+
+    expect(exitCode).toBe(0);
+    expect(stdout).toMatchSnapshot();
+    expect(stderr).toEqual("");
+  });
+
+  test("print error message when wrong file extension is passed using -c", async () => {
+    const { stderr, stdout, exitCode } = await run("-c", "invalid.cpp");
+
+    expect(exitCode).toBe(0);
+    expect(stdout).toMatchSnapshot();
+    expect(stderr).toEqual("");
+  });
+
+  test("print error message when provided file does not exist using -i", async () => {
+    const { stderr, stdout, exitCode } = await run("-i", "non-existent.txt");
+
+    expect(exitCode).toBe(0);
+    expect(stdout).toMatchSnapshot();
+    expect(stderr).toEqual("");
+  });
+
+  test("print error message when provided file does not exist using -c", async () => {
+    const { stderr, stdout, exitCode } = await run("-c", "non-existent.json");
+
+    expect(exitCode).toBe(0);
+    expect(stdout).toMatchSnapshot();
+    expect(stderr).toEqual("");
+  });
 });

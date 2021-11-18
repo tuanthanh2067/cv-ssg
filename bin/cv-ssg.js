@@ -2,7 +2,6 @@
 
 /* global process */
 
-const chalk = require("chalk");
 const yargs = require("yargs");
 
 const ReadPath = require("./helpers/readPath");
@@ -123,10 +122,10 @@ const main = async () => {
 
       produceFile.produce(folderPath);
     } catch (err) {
-      console.log(chalk.yellow(err));
+      console.log(err);
     }
   } catch (err) {
-    console.log(chalk.yellow(err));
+    console.log(err);
   }
 };
 

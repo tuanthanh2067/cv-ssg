@@ -39,7 +39,11 @@ module.exports = class ReadPath {
       this.results = this.readFile();
     } else if (path.extname(this.path) === ".json") {
       this.ext = ".json";
-      this.results = await JSON.parse(await this.readFile());
+      try {
+        this.results = await JSON.parse(await this.readFile());
+      } catch (err) {
+        throw Error(`${this.path} does not exist!`);
+      }
     } else if (path.extname(this.path) === "") {
       this.ext = "folder";
       this.results = this.readFolder();

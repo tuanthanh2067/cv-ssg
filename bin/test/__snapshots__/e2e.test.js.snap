@@ -1,5 +1,44 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`end-to-end integration print error message when provided file does not exist using -c 1`] = `
+"Error: non-existent.json does not exist!
+    at ReadPath.init (C:\\\\Users\\\\16477\\\\Desktop\\\\cv-ssg\\\\bin\\\\helpers\\\\readPath.js:46:15)
+    at async main (C:\\\\Users\\\\16477\\\\Desktop\\\\cv-ssg\\\\bin\\\\cv-ssg.js:72:5)"
+`;
+
+exports[`end-to-end integration print error message when provided file does not exist using -i 1`] = `
+"Is wokring
+Error: non-existent.txt does not exist!
+    at HandleFile.read (C:\\\\Users\\\\16477\\\\Desktop\\\\cv-ssg\\\\bin\\\\helpers\\\\handleFile.js:77:15)
+    at async main (C:\\\\Users\\\\16477\\\\Desktop\\\\cv-ssg\\\\bin\\\\cv-ssg.js:78:28)"
+`;
+
+exports[`end-to-end integration print error message when wrong file extension is passed using -c 1`] = `
+"Error: Wrong file extension, please try again!
+    at ReadPath.init (C:\\\\Users\\\\16477\\\\Desktop\\\\cv-ssg\\\\bin\\\\helpers\\\\readPath.js:52:13)
+    at main (C:\\\\Users\\\\16477\\\\Desktop\\\\cv-ssg\\\\bin\\\\cv-ssg.js:72:20)
+    at Object.<anonymous> (C:\\\\Users\\\\16477\\\\Desktop\\\\cv-ssg\\\\bin\\\\cv-ssg.js:132:1)
+    at Module._compile (internal/modules/cjs/loader.js:1072:14)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1101:10)
+    at Module.load (internal/modules/cjs/loader.js:937:32)
+    at Function.Module._load (internal/modules/cjs/loader.js:778:12)
+    at Function.executeUserEntryPoint [as runMain] (internal/modules/run_main.js:76:12)
+    at internal/main/run_main_module.js:17:47"
+`;
+
+exports[`end-to-end integration print error message when wrong file extension is passed using -i 1`] = `
+"Error: Wrong file extension, please try again!
+    at ReadPath.init (C:\\\\Users\\\\16477\\\\Desktop\\\\cv-ssg\\\\bin\\\\helpers\\\\readPath.js:52:13)
+    at main (C:\\\\Users\\\\16477\\\\Desktop\\\\cv-ssg\\\\bin\\\\cv-ssg.js:72:20)
+    at Object.<anonymous> (C:\\\\Users\\\\16477\\\\Desktop\\\\cv-ssg\\\\bin\\\\cv-ssg.js:132:1)
+    at Module._compile (internal/modules/cjs/loader.js:1072:14)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1101:10)
+    at Module.load (internal/modules/cjs/loader.js:937:32)
+    at Function.Module._load (internal/modules/cjs/loader.js:778:12)
+    at Function.executeUserEntryPoint [as runMain] (internal/modules/run_main.js:76:12)
+    at internal/main/run_main_module.js:17:47"
+`;
+
 exports[`end-to-end integration print help message when --help option is passed 1`] = `
 "cv-ssg.js <args> [options]
 

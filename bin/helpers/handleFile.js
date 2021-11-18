@@ -36,7 +36,7 @@ module.exports = class HandleFile {
         assets: results.assets || null,
       };
     } catch (err) {
-      console.log(err);
+      console.log(err + "Hi");
     }
   }
 
@@ -64,14 +64,18 @@ module.exports = class HandleFile {
       return await this.handleFolder(results);
     }
     if (ext === ".txt" || ext === ".md") {
-      const returnResults = await this.handleFile(ext, results);
+      try {
+        const returnResults = await this.handleFile(ext, results);
 
-      return {
-        results: returnResults.results,
-        metaData: returnResults.metaData,
-        path: pPath,
-        ext: ext,
-      };
+        return {
+          results: returnResults.results,
+          metaData: returnResults.metaData,
+          path: pPath,
+          ext: ext,
+        };
+      } catch (err) {
+        throw Error(`${pPath} does not exist!`);
+      }
     }
     if (ext === ".json") {
       const jsonData = await this.handleJson(results);
