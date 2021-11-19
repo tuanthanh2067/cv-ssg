@@ -12,6 +12,13 @@ describe("readPath class tests", () => {
     });
   });
 
+  test("should set the value of path equals to the passed link", () => {
+    const test = new ReadPath("test.txt");
+    expect(test.path).toEqual("test.txt");
+    expect(test.ext).toEqual("");
+    expect(test.results).toEqual(null);
+  });
+
   describe("readFile tests", () => {
     const txtFileData = "Hello World";
 
@@ -24,6 +31,18 @@ describe("readPath class tests", () => {
         expect(expectData).toEqual(txtFileData);
       } catch (err) {
         console.error(err);
+      }
+    });
+
+    test("Should return 1 if file path is invalid ", async () => {
+      const path = "/invalid-sample-test.txt";
+      fs.__setMockFileData(path, txtFileData);
+      const test = new ReadPath(path);
+      try {
+        const expectData = await test.readFile();
+        expect(expectData).toEqual(1);
+      } catch (err) {
+        // console.error(err);
       }
     });
   });
@@ -72,6 +91,36 @@ describe("readPath class tests", () => {
           resolve("Hello World");
         }),
       });
+    });
+  });
+
+  describe("init tests", () => {
+    test("Should set ext and result values correctly for text file", async () => {
+      const path = "/sample-test.txt";
+      const test = new ReadPath(path);
+      fs.__setMockFileData(path, "Hello World");
+
+      try {
+        await test.init();
+        expect(test.ext).toEqual(".txt");
+        expect(test.results).toEqual("Hello World");
+      } catch (err) {
+        // console.log(err);
+      }
+    });
+
+    test("Should set ext and result values correctly for md file", async () => {
+      const path = "/sample-testmd.md";
+      const test = new ReadPath(path);
+      fs.__setMockFileData(path, "**Hello World**");
+
+      try {
+        await test.init();
+        expect(test.ext).toEqual(".md");
+        expect(test.results).toEqual("**Hello World**");
+      } catch (err) {
+        // console.log(err);
+      }
     });
   });
 });
