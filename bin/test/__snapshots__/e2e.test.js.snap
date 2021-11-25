@@ -13,7 +13,7 @@ Options:
   -h, --help        Show help                                          [boolean]"
 `;
 
-exports[`end-to-end integration print version when --version option is passed 1`] = `"0.1.0"`;
+exports[`end-to-end integration print version when --version option is passed 1`] = `"1.0.2"`;
 
 exports[`end-to-end integration prints error and help message when no arguments given 1`] = `
 "cv-ssg.js <args> [options]

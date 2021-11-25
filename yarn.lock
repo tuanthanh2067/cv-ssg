@@ -2810,7 +2810,7 @@
   "resolved" "https://registry.npmjs.org/shebang-regex/-/shebang-regex-3.0.0.tgz"
   "version" "3.0.0"
 
-"showdown@^1.9.1":
+"showdown@^1.9.0":
   "integrity" "sha512-9cGuS382HcvExtf5AHk7Cb4pAeQQ+h0eTr33V1mu+crYWV4KvWAw6el92bDrqGEk5d46Ai/fhbEUwqJ/mTCNEA=="
   "resolved" "https://registry.npmjs.org/showdown/-/showdown-1.9.1.tgz"
   "version" "1.9.1"

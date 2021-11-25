@@ -6,6 +6,13 @@ CV-SSG is a command line tool that will produce **.html** files from **.txt** an
 
 [Nodejs](https://nodejs.org/en/)
 
+# How to use
+
+Step 1: `npm i -g cv-ssg` to install static site generator globally
+Step 1A: In case you don't have node installed, you can install it [here](https://nodejs.org/en/)
+Step 2: `cv-ssg <option> <filename>` to convert files
+Step 2A: For options, please see option keys sector below.
+
 # Features
 
 - Generate **.html** files from a folder of **.txt** and **.md** files

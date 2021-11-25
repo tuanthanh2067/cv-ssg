@@ -1,6 +1,6 @@
 {
   "name": "cv-ssg",
-  "version": "0.1.0",
+  "version": "1.0.2",
   "description": "",
   "main": "bin/cv-ssg.js",
   "scripts": {
@@ -34,7 +34,7 @@
     "fs-extra": "^10.0.0",
     "node-dir": "^0.1.17",
     "pretty": "^2.0.0",
-    "showdown": "^1.9.1",
+    "showdown": "^1.9.0",
     "yargs": "^17.2.1"
   },
   "devDependencies": {
